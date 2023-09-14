@@ -72,6 +72,7 @@ sealed class Message(
     fun attach(other: Message?){
         if (other == null) return
         if (sender != other.sender) return
+        if (this is System != other is System) return
 
         val timeDifference = this.timestampMillis - other.timestampMillis
         if (abs(timeDifference) > MESSAGE_GROUP_BUFFER_MILLIS) return
