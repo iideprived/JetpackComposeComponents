@@ -41,8 +41,9 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.iideprived.jetpackcomposecomponents.data.Message
 import com.iideprived.jetpackcomposecomponents.data.Message.Companion.MESSAGE_GROUP_BUFFER_MILLIS
 import com.iideprived.jetpackcomposecomponents.data.Message.Companion.MESSAGE_TIMESTAMP_BUFFER_MILLIS
@@ -54,7 +55,17 @@ import kotlin.random.Random
 fun MessageLayout(
     userID: String,
     loadedMessages: List<Message>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scrollAnimationDuration: Int = 1000,
+    systemMessageColor: Color = MaterialTheme.colors.onBackground,
+    systemMessageFontSize: TextUnit = MaterialTheme.typography.body2.fontSize,
+    spaceBetweenMessageGroups: Dp = 16.dp,
+    ownedMessageBackgroundColor: Color = MaterialTheme.colors.primary,
+    ownedMessageTextColor: Color = MaterialTheme.colors.onPrimary,
+    otherMessageBackgroundColor: Color = Color(80, 80, 80),
+    otherMessageTextColor: Color = Color.White,
+    messageRoundnessPercentage: Int = 50,
+
 ) {
     val state = rememberLazyListState()
     var clickedMessage: Message? by remember { mutableStateOf(null)}
@@ -65,7 +76,19 @@ fun MessageLayout(
     ) {
         itemsIndexed(loadedMessages) {index, msg ->
             msg.attach(loadedMessages.getOrNull(index + 1))
-            msg.Message(userID, loadedMessages.getOrNull(index - 1), clickedMessage == msg) { clickedMessage = if (msg == clickedMessage) null else msg }
+            msg.Message(
+                userID,
+                loadedMessages.getOrNull(index - 1),
+                clickedMessage == msg,
+                systemMessageColor,
+                systemMessageFontSize,
+                spaceBetweenMessageGroups,
+                ownedMessageBackgroundColor,
+                ownedMessageTextColor,
+                otherMessageBackgroundColor,
+                otherMessageTextColor,
+                messageRoundnessPercentage,
+            ) { clickedMessage = if (msg == clickedMessage) null else msg }
         }
 
         item {
@@ -84,7 +107,7 @@ fun MessageLayout(
             state.animateScrollToItem(loadedMessages.lastIndex)
         } else {
             coroutineScope {
-                state.animateScrollBy(scrollPosition, tween(1000))
+                state.animateScrollBy(scrollPosition, tween(scrollAnimationDuration))
             }
         }
 
@@ -92,10 +115,18 @@ fun MessageLayout(
 }
 
 @Composable
-fun Message.Message(
+private fun Message.Message(
     userID: String,
     previous: Message?,
     isClicked: Boolean,
+    systemMessageColor: Color = MaterialTheme.colors.onBackground,
+    systemMessageFontSize: TextUnit = MaterialTheme.typography.body1.fontSize,
+    spaceBetweenMessageGroups: Dp = 16.dp,
+    ownedMessageBackgroundColor: Color = MaterialTheme.colors.primary,
+    ownedMessageTextColor: Color = MaterialTheme.colors.onPrimary,
+    otherMessageBackgroundColor: Color = Color(80, 80, 80),
+    otherMessageTextColor: Color = Color.White,
+    messageRoundnessPercentage: Int = 50,
     onClick: () -> Unit,
 ) {
     val timestamp = remember(previous) {
@@ -119,8 +150,8 @@ fun Message.Message(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp, horizontal = 16.dp)
                     .alpha(0.5f),
-                color = MaterialTheme.colors.onBackground,
-                fontSize = 14.sp,
+                color = systemMessageColor,
+                fontSize = systemMessageFontSize,
                 textAlign = TextAlign.Center
             )
         }
@@ -131,18 +162,18 @@ fun Message.Message(
                     modifier = Modifier
                         .padding(
                             top = 1.dp,
-                            bottom = if (isLastOfGroup()) 16.dp else 1.dp,
+                            bottom = if (isLastOfGroup()) spaceBetweenMessageGroups else 1.dp,
                             start = 16.dp,
                             end = 16.dp
                         )
                         .background(
-                            color = if (isMyMessage) MaterialTheme.colors.primary else
-                                Color(80, 80, 80),
+                            color = if (isMyMessage) ownedMessageBackgroundColor else
+                                otherMessageBackgroundColor,
                             shape = when (placement) {
-                                Message.Placement.Only -> RoundedCornerShape(50)
-                                Message.Placement.First -> RoundedCornerShape(50, 50, 25, 25)
-                                Message.Placement.Middle -> RoundedCornerShape(25)
-                                Message.Placement.Last -> RoundedCornerShape(25, 25, 50, 50)
+                                Message.Placement.Only -> RoundedCornerShape(messageRoundnessPercentage)
+                                Message.Placement.First -> RoundedCornerShape(messageRoundnessPercentage,  messageRoundnessPercentage, messageRoundnessPercentage / 2, messageRoundnessPercentage / 2)
+                                Message.Placement.Middle -> RoundedCornerShape(messageRoundnessPercentage / 2)
+                                Message.Placement.Last -> RoundedCornerShape(messageRoundnessPercentage / 2, messageRoundnessPercentage / 2, messageRoundnessPercentage, messageRoundnessPercentage)
                             }
                         )
                         .padding(8.dp)
@@ -153,7 +184,7 @@ fun Message.Message(
                             onClick = onClick
                         )
                     ,
-                    color = Color.White
+                    color = if (isMyMessage) ownedMessageTextColor else otherMessageTextColor
                 )
             }
             is Message.Link -> {}
@@ -169,8 +200,8 @@ fun Message.Message(
                             start = 16.dp, end = 16.dp
                         )
                         .alpha(0.8f),
-                    color = MaterialTheme.colors.onBackground,
-                    fontSize = 14.sp,
+                    color = systemMessageColor,
+                    fontSize = systemMessageFontSize,
                     textAlign = TextAlign.Center
                 )
             }
@@ -210,9 +241,7 @@ private fun MessageLayoutPreview() {
             verticalArrangement = Arrangement.Bottom
         ) {
             MessageLayout("1", messages, Modifier.weight(1f))
-            Row(
-
-            ) {
+            Row{
                 var newText by remember { mutableStateOf("") }
                 TextField(value = newText, onValueChange = {newText = it})
                 IconButton(
