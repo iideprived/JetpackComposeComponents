@@ -14,24 +14,17 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ModifierInfo
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,7 +39,7 @@ object TextStyles {
         fontWeight = FontWeight.SemiBold,
         letterSpacing = 0.5.sp
     )
-    val Subheader = TextStyle(
+    val SubHeader = TextStyle(
         fontSize = 20.sp,
         color = Color.White,
         fontWeight = FontWeight.SemiBold,
@@ -69,11 +62,11 @@ object TextStyles {
 @Composable
 fun String.Header(
     color: Color = Color.White,
-    isSubheader: Boolean = false
+    isSubHeader: Boolean = false
 ) {
     Text(
         text = this,
-        style = if (isSubheader) TextStyles.Subheader else TextStyles.Header,
+        style = if (isSubHeader) TextStyles.SubHeader else TextStyles.Header,
         color = color
     )
 }
@@ -227,10 +220,10 @@ fun Number.Rating(
 @Preview
 private fun HeaderPreview(){
     MaterialTheme {
-        Column() {
+        Column {
             "Header".Header()
             Spacer(Modifier.height(2.dp))
-            "Subheader".Header(isSubheader = true)
+            "Sub Header".Header(isSubHeader = true)
         }
     }
 }
@@ -250,11 +243,9 @@ private fun ContentPreview(){
 @Preview
 private fun RoundedButtonPreview() {
     MaterialTheme {
-        Column() {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             "Details".RoundedButton(icon = Icons.Rounded.ArrowDropDown)
-            Spacer(Modifier.height(2.dp))
             "Location".RoundedButton()
-            Spacer(Modifier.height(2.dp))
             "".RoundedButton(icon = Icons.Rounded.Place)
         }
     }
@@ -264,15 +255,13 @@ private fun RoundedButtonPreview() {
 @Preview
 private fun RatingsPreview(){
     MaterialTheme {
-        Column {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             2.5f.Rating()
-            Spacer(Modifier.height(2.dp))
             2.5f.Rating(
                 ratingShape = RectangleShape,
                 spaceBetweenRatings = 0.dp,
                 ratingBorderColor = Color.Transparent
             )
-            Spacer(Modifier.height(2.dp))
             2.5f.Rating(
                 spaceBetweenRatings = 2.dp,
                 ratingBorderColor = Color.Black,
