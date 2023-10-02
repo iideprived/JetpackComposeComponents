@@ -224,7 +224,7 @@ private fun MessageLayoutPreview() {
                 Message.Text("1", "Ts was crazy ngl", currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 - MESSAGE_GROUP_BUFFER_MILLIS * 3 - 4),
                 Message.Text("2", "Nah", currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 - MESSAGE_GROUP_BUFFER_MILLIS * 3 - 3),
                 Message.Text("2", "What happen lmfao", currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 - MESSAGE_GROUP_BUFFER_MILLIS * 3 - 2),
-                Message.Text("2", "😂", currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 - MESSAGE_GROUP_BUFFER_MILLIS * 3 - 1),
+                Message.Text("2", "😂"    , currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 - MESSAGE_GROUP_BUFFER_MILLIS * 3 - 1),
                 Message.Text("2", "Yeah, you good with the suspense...", currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 - MESSAGE_GROUP_BUFFER_MILLIS - 2),
                 Message.Text("2", "You always doing that", currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 - MESSAGE_GROUP_BUFFER_MILLIS - 1),
                 Message.Text("2", "... \uD83E\uDEF5😠ur done", currentTime - MESSAGE_TIMESTAMP_BUFFER_MILLIS * 49 ),

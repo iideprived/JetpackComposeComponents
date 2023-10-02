@@ -12,7 +12,7 @@ android {
         minSdk 26
         targetSdk 34
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -75,7 +75,7 @@ afterEvaluate {
 
                 groupId = "com.github.iideprived"
                 artifactId = "jetpack-compose-components"
-                version = "1.0"
+                version = "1.0.1"
             }
         }
     }
