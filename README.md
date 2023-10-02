@@ -18,7 +18,7 @@ In your ```app/build.gradle```, import the project
 // In app/build.gradle
   dependencies {
     ...
-    implementation 'com.github.iideprived:JetpackComposeComponents:0.1.6'
+    implementation 'com.github.iideprived:JetpackComposeComponents:0.5'
   }
 ```
 
