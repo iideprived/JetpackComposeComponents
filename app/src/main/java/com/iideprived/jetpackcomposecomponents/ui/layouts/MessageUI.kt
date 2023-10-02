@@ -103,6 +103,7 @@ fun MessageLayout(
 
 
     LaunchedEffect(loadedMessages.lastOrNull()){
+        if (loadedMessages.isEmpty()) return@LaunchedEffect
         if (scrollPosition == 0f){
             state.animateScrollToItem(loadedMessages.lastIndex)
         } else {
